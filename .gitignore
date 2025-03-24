@@ -1,3 +1,4 @@
 config/secrets.json
 DE_ETL_VLille.ipynb
 de-etl-vlille-df7d7cb7f85b.json
+src/__pycache__/config.cpython-311.pyc
