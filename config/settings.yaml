@@ -1,0 +1,17 @@
+project:
+  name: "DE_05_ETL_VLille_Spark"
+  description: "Pipeline ETL pour collecter et analyser les données V'Lille avec Spark et BigQuery"
+
+data_source:
+  api_url: "https://data.lillemetropole.fr/data/ogcapi/collections/ilevia:vlille_temps_reel/items?f=json&limit=-1"
+  update_frequency: "5min"
+
+bigquery:
+  project_id: "de-etl-vlille"
+  dataset: "vlille_clean"
+  table: "vlille_data"
+  write_mode: "overwrite"
+
+spark:
+  master: "local[*]"
+  bigquery_connector_version: "0.30.0"
