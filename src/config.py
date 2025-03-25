@@ -1,9 +1,10 @@
 import findspark
 findspark.init()
 
+import os
 from pyspark.sql import SparkSession
 import json
-import os
+
 
 CONFIG_PATH = "./spark_config.json"
 
