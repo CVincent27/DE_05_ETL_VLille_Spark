@@ -5,7 +5,7 @@ from pyspark.sql import SparkSession
 import json
 import os
 
-CONFIG_PATH = "/content/spark_config.json"
+CONFIG_PATH = "./spark_config.json"
 
 def init_spark():
     spark = SparkSession.builder.master("local[*]").getOrCreate()
@@ -27,7 +27,7 @@ def load_spark():
     with open(CONFIG_PATH, "r") as f:
         config = json.load(f)
 
-    # Recréer session spark avec la même config
+    # Recréer session avec la même config
     spark_builder = SparkSession.builder.master("local[*]")
     for k, v in config.items():
         spark_builder = spark_builder.config(k, v)
