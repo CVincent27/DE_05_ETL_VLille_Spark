@@ -1,3 +1,5 @@
-pyspark==3.5.0
-findspark==2.0.1
+pyspark
+findspark
 requests
+pandas
+numpy
