@@ -6,12 +6,11 @@ def init_or_load_spark():
         spark, sc = load_spark()
     except FileNotFoundError:
         print("Init nouvelle session Spark")
-        spark, sc = init_spark()
+        spark = init_spark()
     return spark
 
 def get_data_vlille(spark):
     url = "https://data.lillemetropole.fr/data/ogcapi/collections/ilevia:vlille_temps_reel/items?f=json&limit=-1"
-    
     response = requests.get(url)
     
     if response.status_code == 200:
@@ -25,22 +24,33 @@ def get_data_vlille(spark):
     records = data.get("records", [])
     # print(type(records))
     print(records[:1])
+    return records
+
+def get_extracted_data(spark, records):
+    if not records:
+        print("Aucune donnée")
+        return None
 
     extracted_data = [{
-        'id': record.get('@id', None),
-        'nom': record.get('nom', None),
-        'etat' : record.get('etat', None),
-        'nb_places_dispo' : record.get('nb_places_dispo', None),
-        'nb_velos_dispo' : record.get('nb_velos_dispo', None),
-        'etat_connexion' : record.get('etat_connexion', None),
-        'x' : record.get('x', None),
-        'y' : record.get('y', None),
-        'date' : record.get('date_modification', None),
-    } for record in records]    
+    'id': record.get('@id', None),
+    'nom': record.get('nom', None),
+    'etat' : record.get('etat', None),
+    'nb_places_dispo' : record.get('nb_places_dispo', None),
+    'nb_velos_dispo' : record.get('nb_velos_dispo', None),
+    'etat_connexion' : record.get('etat_connexion', None),
+    'x' : record.get('x', None),
+    'y' : record.get('y', None),
+    'date' : record.get('date_modification', None),
+    } for record in records]
+
     df_spark = spark.createDataFrame(extracted_data)
-    df_spark.show(1)
+    # df_spark.show(1)
+    print('dataframe crée')
+    df_spark.select("id").show(1)
     return df_spark
 
 if __name__ == "__main__":
     spark = init_or_load_spark()
-    df_spark = get_data_vlille(spark)
+    records = get_data_vlille(spark)
+    if records:
+        df_spark = get_extracted_data(records)
