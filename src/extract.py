@@ -39,7 +39,8 @@ def get_data_vlille(spark):
     } for record in records]    
     df_spark = spark.createDataFrame(extracted_data)
     df_spark.show(5)
-    df_spark.write.parquet("./data")
+    return df_spark
 
-spark = init_or_load_spark()
-get_data_vlille(spark)
+if __name__ == "__main__":
+    spark = init_or_load_spark()
+    df_spark = get_data_vlille(spark)
