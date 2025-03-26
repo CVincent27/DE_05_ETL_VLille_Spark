@@ -21,9 +21,9 @@ def get_data_vlille(spark):
         print(f"erreur: {response.status_code}")
         return  
 
-    print(type(data))
+    # print(type(data))
     records = data.get("records", [])
-    print(type(records))
+    # print(type(records))
     print(records[:1])
 
     extracted_data = [{
@@ -39,6 +39,7 @@ def get_data_vlille(spark):
     } for record in records]    
     df_spark = spark.createDataFrame(extracted_data)
     df_spark.show(5)
+    df_spark.write.parquet("./data")
 
 spark = init_or_load_spark()
 get_data_vlille(spark)
