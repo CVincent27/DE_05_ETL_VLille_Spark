@@ -38,7 +38,9 @@ def get_data_vlille(spark):
         'date' : record.get('date_modification', None),
     } for record in records]    
     df_spark = spark.createDataFrame(extracted_data)
-    df_spark.show(5)
+    df_spark = df_spark.repartition(2)  # Ajuste le nombre de partitions selon ta RAM
+    df_spark.write.mode("overwrite").parquet("C:/Users/coque/OneDrive/Bureau/dev/DE_05_ETL_Vlille/src/data/raw_data.parquet")
+
 
 spark = init_or_load_spark()
 get_data_vlille(spark)
