@@ -38,7 +38,7 @@ def get_data_vlille(spark):
         'date' : record.get('date_modification', None),
     } for record in records]    
     df_spark = spark.createDataFrame(extracted_data)
-    df_spark.show(5)
+    df_spark.show(1)
     return df_spark
 
 if __name__ == "__main__":
