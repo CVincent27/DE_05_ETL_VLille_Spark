@@ -26,7 +26,7 @@ def get_data_vlille(spark):
     print(records[:1])
     return records
 
-def get_extracted_data(spark, records):
+def get_extracted_data(spark, records, limit=5):
     if not records:
         print("Aucune donnée")
         return None
@@ -41,11 +41,11 @@ def get_extracted_data(spark, records):
     'x' : record.get('x', None),
     'y' : record.get('y', None),
     'date' : record.get('date_modification', None),
-    } for record in records]
+    } for record in records[:limit]]
 
     df_spark = spark.createDataFrame(extracted_data)
     # df_spark.show(1)
-    print('dataframe crée')
+    print(f"dataframe : {df_spark} crée")
     df_spark.select("id").show(1)
     return df_spark
 
@@ -53,4 +53,4 @@ if __name__ == "__main__":
     spark = init_or_load_spark()
     records = get_data_vlille(spark)
     if records:
-        df_spark = get_extracted_data(records)
+        df_spark = get_extracted_data(spark, records)
