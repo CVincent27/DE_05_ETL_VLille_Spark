@@ -1,4 +1,4 @@
-from config import init_spark, load_spark
+from config import init_spark, load_spark, RAW_DATA_PATH
 import requests
 
 def init_or_load_spark():
@@ -6,7 +6,7 @@ def init_or_load_spark():
         spark, sc = load_spark()
     except FileNotFoundError:
         print("Init nouvelle session Spark")
-        spark = init_spark()
+        spark, sc = init_spark()
     return spark
 
 def get_data_vlille(spark):
@@ -44,8 +44,9 @@ def get_extracted_data(spark, records, limit=5):
     } for record in records[:limit]]
 
     df_spark = spark.createDataFrame(extracted_data)
+    df_spark.write.mode("overwrite").json(RAW_DATA_PATH)
     # df_spark.show(1)
-    print(f"dataframe : {df_spark} crée")
+    print(f"dataframe : {df_spark} crée et sauvegardé ici : {RAW_DATA_PATH}")
     df_spark.select("id").show(1)
     return df_spark
 
