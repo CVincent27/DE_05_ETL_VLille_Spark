@@ -11,7 +11,7 @@ def load_raw_data(spark):
     df_raw_data = spark.read.json(RAW_DATA_PATH)
     print('Chargement des données effectué')
     ## Info data
-    df_raw_data.printSchema()
+    # df_raw_data.printSchema()
     # df_raw_data.show(2)
     # df_raw_data.describe().show()
     print(f"Colonnes: {df_raw_data.columns}")
@@ -30,7 +30,7 @@ def clean_data(df_raw_data):
     df_reformed_data = df_raw_data.filter(col("etat") == "RÉFORMÉ")
     df_data_filtre = df_raw_data.filter(col("etat") != "RÉFORMÉ")
     print(f"Nombre de stations réformée: {df_reformed_data.count()}")
-    df_reformed_data.show(2)
+    # df_reformed_data.show(2)
     df_data_filtre.select('etat', 'etat_connexion').distinct().show()
     ## Export reformed vers json
     df_reformed_data.write.mode("overwrite").json(REFORMED_STATIONS_PATH)
@@ -41,14 +41,25 @@ def clean_data(df_raw_data):
         print(f"doublons {i} : {check_duplicates.count()}")
     return df_data_filtre
 
-def transform_data(df_data_filtre):
+def format_date(df_data_filtre):
     df_format_date = df_data_filtre.withColumn('date', F.date_format(F.to_timestamp(df_data_filtre['date'], 'yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX'), 'yyyy-MM-dd HH:mm'))
     df_format_date = df_format_date.orderBy(F.desc('date'))
-    df_format_date.show(1)
+    #df_format_date.show(1)
+    return df_format_date
+
+# Ajout de col nb_places_total et %_full
+def add_col_infos(df_format_date):
+    df_data_add_col = df_format_date.withColumn('nb_places_totales', df_format_date['nb_places_dispo'] + df_format_date['nb_velos_dispo'])
+    df_data_add_col = df_data_add_col.withColumn('%_full',((col('nb_velos_dispo')) / col('nb_places_totales')) * 100)
+    df_data_add_col = df_data_add_col.withColumn('%_full', round(col('%_full'), 2))
+    df_data_add_col.show(3)
+    print(df_data_add_col.filter(col('%_full').isNull()).count())
+    return df_data_add_col
 
 if __name__ == "__main__":
     spark = init_or_load_spark()
     df_raw_data = load_raw_data(spark)
     if df_raw_data:
         df_data_filtre = clean_data(df_raw_data)
-        transform_data(df_data_filtre)
+        df_format_date = format_date(df_data_filtre)
+        add_col_infos(df_format_date)
