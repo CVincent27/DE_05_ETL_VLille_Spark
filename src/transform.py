@@ -15,7 +15,7 @@ def load_raw_data(spark):
     # df_raw_data.show(2)
     # df_raw_data.describe().show()
     print(f"Colonnes: {df_raw_data.columns}")
-    print(f"Nombre de colonnes: {df_raw_data.count()}")
+    print(f"Nombre de lignes: {df_raw_data.count()}")
     print(f"Type des données: {df_raw_data.dtypes}")
     return df_raw_data
 
@@ -27,8 +27,12 @@ def transform_data(df_raw_data):
     # 1. Data cleaning
     # Liste des valeurs de etat et etat connexion
     df_raw_data.select('etat', 'etat_connexion').distinct().show()
-
-    
+    # add df reformed_data et filtre sur le df raw_data
+    df_reformed_data = df_raw_data.filter(col("etat") == "RÉFORMÉ")
+    df_raw_data_filtre = df_raw_data.filter(col("etat") != "RÉFORMÉ")
+    print(f"Nombre de stations réformée: {df_reformed_data.count()}")
+    df_reformed_data.show(2)
+    df_raw_data_filtre.select('etat', 'etat_connexion').distinct().show()
 
 if __name__ == "__main__":
     spark = init_or_load_spark()
