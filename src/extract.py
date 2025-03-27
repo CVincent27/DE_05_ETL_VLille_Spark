@@ -45,12 +45,13 @@ def get_extracted_data(spark, records, limit=5):
     'x' : record.get('x', None),
     'y' : record.get('y', None),
     'date' : record.get('date_modification', None),
-    } for record in records[:limit]]
+    } for record in records]
 
     df_spark = spark.createDataFrame(extracted_data)
     df_spark.write.mode("overwrite").json(RAW_DATA_PATH)
     # df_spark.show(1)
     print(f"dataframe : {df_spark} crée et sauvegardé ici : {RAW_DATA_PATH}")
+    print(f"Nombre de lignes insérés : {df_spark.count()}")
     df_spark.select("id").show(1)
     return df_spark
 
