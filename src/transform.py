@@ -39,10 +39,16 @@ def clean_data(df_raw_data):
     for i in list_col:
         check_duplicates = df_data_filtre.groupBy(i).count().filter(F.col('count') > 1)
         print(f"doublons {i} : {check_duplicates.count()}")
-        check_duplicates.show()
+    return df_data_filtre
+
+def transform_data(df_data_filtre):
+    df_format_date = df_data_filtre.withColumn('date', F.date_format(F.to_timestamp(df_data_filtre['date'], 'yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX'), 'yyyy-MM-dd HH:mm'))
+    df_format_date = df_format_date.orderBy(F.desc('date'))
+    df_format_date.show(1)
 
 if __name__ == "__main__":
     spark = init_or_load_spark()
     df_raw_data = load_raw_data(spark)
     if df_raw_data:
-        clean_data(df_raw_data)
+        df_data_filtre = clean_data(df_raw_data)
+        transform_data(df_data_filtre)
