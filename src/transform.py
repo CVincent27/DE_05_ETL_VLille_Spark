@@ -69,6 +69,9 @@ def transformation_id(df_data_add_col):
     check_id.show()
     return df_clean_id
 
+def reorder_columns(df, order):
+    return df.select(order)
+
 if __name__ == "__main__":
     spark = init_or_load_spark()
     df_raw_data = load_raw_data(spark)
@@ -76,4 +79,8 @@ if __name__ == "__main__":
         df_data_filtre = clean_data(df_raw_data)
         df_format_date = format_date(df_data_filtre)
         df_data_add_col = add_col_infos(df_format_date)
-        transformation_id(df_data_add_col)
+        df_clean_id = transformation_id(df_data_add_col)
+        column_order = ['id', 'nom', 'date', 'etat', 'etat_connexion', 'nb_velos_dispo', 
+                        'nb_places_dispo', 'nb_places_totales', '%_full', 'x', 'y']
+        df_clean = reorder_columns(df_clean_id, column_order)
+        df_clean.show(3)
