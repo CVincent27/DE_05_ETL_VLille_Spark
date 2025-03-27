@@ -9,22 +9,26 @@ def load_raw_data(spark):
         return None
     
     df_raw_data = spark.read.json(RAW_DATA_PATH)
+    print('Chargement des données effectué')
+    # Info data
     df_raw_data.printSchema()
+    # df_raw_data.show(2)
+    # df_raw_data.describe().show()
+    print(f"Colonnes: {df_raw_data.columns}")
+    print(f"Nombre de colonnes: {df_raw_data.count()}")
+    print(f"Type des données: {df_raw_data.dtypes}")
     return df_raw_data
 
 def transform_data(df_raw_data):
     if df_raw_data is None:
         print("Dataframe introuvable")
         return None
+    
+    # 1. Data cleaning
+    # Liste des valeurs de etat et etat connexion
+    df_raw_data.select('etat', 'etat_connexion').distinct().show()
 
-    # 1. Formatage de la data
-    df_format_date = df_raw_data.withColumn('date', F.date_format(F.to_timestamp(df_raw_data['date'], 'yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX'), 'yyyy-MM-dd HH:mm'))
-    df_format_date = df_format_date.orderBy(F.desc('date'))
-    # df_format_date.show(5)
-
-    # 2. Add nb_places_totales et % full
-    df_add_col = df_format_date.withColumn('nb_places_totales', df_format_date['nb_places_dispo'] + df_format_date['nb_velos_dispo'])
-    df_add_col.show(5)
+    
 
 if __name__ == "__main__":
     spark = init_or_load_spark()
