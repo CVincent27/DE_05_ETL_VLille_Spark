@@ -1,4 +1,4 @@
-from config import init_spark, load_spark, RAW_DATA_PATH
+from config import init_spark, load_spark, RAW_DATA_PATH, os
 import requests
 
 def init_or_load_spark():
@@ -30,6 +30,10 @@ def get_extracted_data(spark, records, limit=5):
     if not records:
         print("Aucune donnée")
         return None
+    
+    data_dir = os.path.dirname(RAW_DATA_PATH)
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
 
     extracted_data = [{
     'id': record.get('@id', None),
