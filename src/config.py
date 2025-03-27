@@ -6,6 +6,7 @@ from pyspark.sql import SparkSession
 import json
 
 CONFIG_PATH = "./spark_config.json"
+RAW_DATA_PATH = "/data/raw_data.json"
 
 def init_spark():
     spark = SparkSession.builder.master("local[*]").getOrCreate()
