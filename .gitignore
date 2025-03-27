@@ -6,3 +6,4 @@ src/__pycache__/config.cpython-313.pyc
 src/__pycache__/config.cpython-38.pyc
 src/__pycache__/extract.cpython-38.pyc
 DE_ETL_VLille.ipynb
+spark_config.json
