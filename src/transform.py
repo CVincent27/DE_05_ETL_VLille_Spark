@@ -1,8 +1,16 @@
-from extract import init_or_load_spark, get_extracted_data, get_data_vlille
+from extract import init_or_load_spark
+from config import RAW_DATA_PATH, os
 from pyspark.sql import functions as F
 
-spark = init_or_load_spark()
-records = get_data_vlille(spark)
-df_spark = get_extracted_data(spark, records)
+def load_raw_data(spark):
+    if not os.path.exists(RAW_DATA_PATH):
+        print("Fichier JSON introuvable")
+        return None
+    
+    df_raw_data = spark.read.json(RAW_DATA_PATH)
+    df_raw_data.printSchema()
+    return df_raw_data
 
-df_spark.show(2)
+if __name__ == "__main__":
+    spark = init_or_load_spark()
+    df_raw_data = load_raw_data(spark)
