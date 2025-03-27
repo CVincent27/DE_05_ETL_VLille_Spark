@@ -14,4 +14,4 @@ Ce projet consiste à extraire les données des stations V'Lille (Vélib' Lilloi
 * Pyspark pour la transformation et le nettoyage des données
 * Airflow pour l'orchestration des tâches ETL
 * BigQuery pour le stockage et l'analyse des données
-* Google Colab pour l'exécution et le développement du pipeline
+* Scripts Python pour l'exécution et le développement du pipeline
