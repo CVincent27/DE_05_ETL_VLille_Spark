@@ -8,3 +8,4 @@ src/__pycache__/extract.cpython-38.pyc
 DE_ETL_VLille.ipynb
 spark_config.json
 /data/raw_data.json
+/src/data
