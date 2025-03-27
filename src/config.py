@@ -6,7 +6,7 @@ from pyspark.sql import SparkSession
 import json
 
 CONFIG_PATH = "./spark_config.json"
-RAW_DATA_PATH = "/data/raw_data.json"
+RAW_DATA_PATH = "./src/data/raw_data.json"
 
 def init_spark():
     spark = SparkSession.builder.master("local[*]").getOrCreate()
@@ -22,13 +22,13 @@ def init_spark():
 
 def load_spark():
     if not os.path.exists(CONFIG_PATH):
-        raise FileNotFoundError("Lancer d'abord `init_spark()`.")
+        raise FileNotFoundError("execute `init_spark()`.")
 
-    # Charger config
+    # load config spark
     with open(CONFIG_PATH, "r") as f:
         config = json.load(f)
 
-    # Recréer session avec la même config
+    # recréer session avec la même config
     spark_builder = SparkSession.builder.master("local[*]")
     for k, v in config.items():
         spark_builder = spark_builder.config(k, v)
