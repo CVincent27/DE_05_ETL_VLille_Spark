@@ -42,10 +42,16 @@ def clean_data(df_raw_data):
     return df_data_filtre
 
 def format_date(df_data_filtre):
-    df_format_date = df_data_filtre.withColumn('date', F.date_format(F.to_timestamp(df_data_filtre['date'], 'yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX'), 'yyyy-MM-dd HH:mm'))
+    df_format_date = df_data_filtre.withColumn(
+        'date',
+        F.date_format(
+            (F.to_timestamp(df_data_filtre['date'], "yyyy-MM-dd'T'HH:mm:ss.SSSXXX") - F.expr("INTERVAL 1 HOURS")),
+            "yyyy-MM-dd HH:mm"
+        )
+    )
     df_format_date = df_format_date.orderBy(F.desc('date'))
-    #df_format_date.show(1)
     return df_format_date
+
 
 # Ajout de col nb_places_total et %_full
 def add_col_infos(df_format_date):
