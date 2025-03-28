@@ -1,4 +1,5 @@
-from config import init_spark, load_spark, RAW_DATA_PATH, os
+from config import init_spark, load_spark, RAW_DATA_PATH
+import os
 import requests
 
 def init_or_load_spark():
