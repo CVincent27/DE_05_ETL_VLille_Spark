@@ -1,5 +1,6 @@
 from extract import init_or_load_spark
-from config import RAW_DATA_PATH, REFORMED_STATIONS_PATH, os
+from config import RAW_DATA_PATH, REFORMED_STATIONS_PATH, CLEAN_DATA_PATH
+import os
 from pyspark.sql import functions as F
 from pyspark.sql.functions import col, round
 
@@ -66,11 +67,19 @@ def transformation_id(df_data_add_col):
     df_clean_id.show(5)
     # check unique id
     check_id = df_clean_id.groupBy('id').count().filter(F.col('count') > 1)
-    check_id.show()
+    #check_id.show()
     return df_clean_id
 
 def reorder_columns(df, order):
     return df.select(order)
+
+def save_clean_df(df_clean):
+    df_clean.write.mode("overwrite").json(CLEAN_DATA_PATH)
+    # df_clean.show(1)
+    print(f"dataframe crée et sauvegardé ici : {CLEAN_DATA_PATH}")
+    print(f"Nombre de lignes insérés : {df_clean.count()}")
+    df_clean.show(1)
+    return df_clean
 
 if __name__ == "__main__":
     spark = init_or_load_spark()
@@ -80,7 +89,7 @@ if __name__ == "__main__":
         df_format_date = format_date(df_data_filtre)
         df_data_add_col = add_col_infos(df_format_date)
         df_clean_id = transformation_id(df_data_add_col)
-        column_order = ['id', 'nom', 'date', 'etat', 'etat_connexion', 'nb_velos_dispo', 
-                        'nb_places_dispo', 'nb_places_totales', '%_full', 'x', 'y']
+        column_order = ['id', 'nom', 'date', 'etat', 'etat_connexion', 'nb_velos_dispo', 'nb_places_dispo', 'nb_places_totales', '%_full', 'x', 'y']
         df_clean = reorder_columns(df_clean_id, column_order)
         df_clean.show(3)
+        save_clean_df(df_clean)
