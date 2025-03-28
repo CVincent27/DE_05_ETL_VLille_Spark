@@ -76,7 +76,7 @@ def reorder_columns(df, order):
 def save_clean_df(df_clean):
     df_clean.write.mode("overwrite").json(CLEAN_DATA_PATH)
     # df_clean.show(1)
-    print(f"dataframe crée et sauvegardé ici : {CLEAN_DATA_PATH}")
+    print(f"json clean crée : {CLEAN_DATA_PATH}")
     print(f"Nombre de lignes insérés : {df_clean.count()}")
     df_clean.show(1)
     return df_clean
