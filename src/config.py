@@ -8,6 +8,7 @@ import json
 CONFIG_PATH = "./spark_config.json"
 RAW_DATA_PATH = "./src/data/raw_data.json"
 REFORMED_STATIONS_PATH = "./src/data/reformed_stations.json"
+CLEAN_DATA_PATH = "./src/data/clean_data.json"
 
 def init_spark():
     spark = SparkSession.builder.master("local[*]").getOrCreate()
