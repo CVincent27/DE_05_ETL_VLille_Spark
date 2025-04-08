@@ -8,7 +8,8 @@ import json
 CONFIG_PATH = "./spark_config.json"
 RAW_DATA_PATH = "./src/data/raw_data.json"
 REFORMED_STATIONS_PATH = "./src/data/reformed_stations.json"
-CLEAN_DATA_PATH = "./src/data/clean_data.json"
+CLEAN_DATA_PATH = "./src/data/clean_data/clean_data.json"
+CLEAN_DATA_CSV = "./src/data/clean_data/clean_data.csv"
 
 SQL_CONNECTOR_PATH = r"C:\spark\mysql-connector-j-9.2.0\mysql-connector-j-9.2.0.jar"
 
