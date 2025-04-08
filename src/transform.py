@@ -1,5 +1,5 @@
 from extract import init_or_load_spark
-from config import RAW_DATA_PATH, REFORMED_STATIONS_PATH, CLEAN_DATA_PATH
+from config import RAW_DATA_PATH, REFORMED_STATIONS_PATH, CLEAN_DATA_PATH, CLEAN_DATA_CSV
 import os
 from pyspark.sql import functions as F
 from pyspark.sql.functions import col, round
@@ -45,7 +45,7 @@ def format_date(df_data_filtre):
     df_format_date = df_data_filtre.withColumn(
         'date',
         F.date_format(
-            (F.to_timestamp(df_data_filtre['date'], "yyyy-MM-dd'T'HH:mm:ss.SSSXXX") - F.expr("INTERVAL 1 HOURS")),
+            (F.to_timestamp(df_data_filtre['date'], "yyyy-MM-dd'T'HH:mm:ss.SSSXXX") - F.expr("INTERVAL 2 HOURS")),
             "yyyy-MM-dd HH:mm"
         )
     )
@@ -80,10 +80,21 @@ def reorder_columns(df, order):
     return df.select(order)
 
 def save_clean_df(df_clean):
+    # Pour le fichier JSON
     df_clean.write.mode("overwrite").json(CLEAN_DATA_PATH)
-    # df_clean.show(1)
-    print(f"json clean crée : {CLEAN_DATA_PATH}")
-    print(f"Nombre de lignes insérés : {df_clean.count()}")
+
+    # CSV en 1 seul fichier
+    df_clean.coalesce(1).write.mode("overwrite").option("header", "true").csv(CLEAN_DATA_CSV)
+
+    # rename csv
+    for filename in os.listdir(CLEAN_DATA_CSV):
+        if filename.endswith(".csv"):
+            os.rename(os.path.join(CLEAN_DATA_CSV, filename), os.path.join(CLEAN_DATA_CSV, "data_clean.csv"))
+            break
+
+    print(f"json clean créé : {CLEAN_DATA_PATH}")
+    print(f"CSV clean créé à : {CLEAN_DATA_CSV}/output.csv")
+    print(f"Nombre de lignes insérées : {df_clean.count()}")
     df_clean.show(1)
     return df_clean
 
