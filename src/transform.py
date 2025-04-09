@@ -12,9 +12,9 @@ def load_raw_data(spark):
     df_raw_data = spark.read.json(RAW_DATA_PATH)
     print('Chargement des données effectué')
     ## Info data
-    # df_raw_data.printSchema()
-    # df_raw_data.show(2)
-    # df_raw_data.describe().show()
+    df_raw_data.printSchema()
+    df_raw_data.show(2)
+    df_raw_data.describe().show()
     print(f"Colonnes: {df_raw_data.columns}")
     print(f"Nombre de lignes: {df_raw_data.count()}")
     print(f"Type des données: {df_raw_data.dtypes}")
@@ -58,7 +58,7 @@ def add_col_infos(df_format_date):
     df_data_add_col = (df_format_date
                        .withColumn('nb_places_totales', df_format_date['nb_places_dispo'] + df_format_date['nb_velos_dispo'])
                        .withColumn('%_full', ((col('nb_velos_dispo')) / col('nb_places_totales')) * 100)
-                       .withColumn('%_full', round(col('%_full'), 2))
+                       .withColumn("%_full", col("%_full").cast("int"))
     )
     # df_data_add_col.show(3)
     return df_data_add_col
@@ -95,6 +95,7 @@ def save_clean_df(df_clean):
     print(f"json clean créé : {CLEAN_DATA_PATH}")
     print(f"CSV clean créé à : {CLEAN_DATA_CSV}/data_clean.csv")
     print(f"Nbr de lignes : {df_clean.count()}")
+    print(f"Type des données: {df_clean.dtypes}")
     df_clean.show(1)
     return df_clean
 
