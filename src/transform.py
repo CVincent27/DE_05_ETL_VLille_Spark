@@ -93,8 +93,8 @@ def save_clean_df(df_clean):
             break
 
     print(f"json clean créé : {CLEAN_DATA_PATH}")
-    print(f"CSV clean créé à : {CLEAN_DATA_CSV}/output.csv")
-    print(f"Nombre de lignes insérées : {df_clean.count()}")
+    print(f"CSV clean créé à : {CLEAN_DATA_CSV}/data_clean.csv")
+    print(f"Nbr de lignes : {df_clean.count()}")
     df_clean.show(1)
     return df_clean
 
