@@ -1,4 +1,4 @@
-from ETL.config import init_spark, load_spark, RAW_DATA_PATH
+from config import init_spark, load_spark, RAW_DATA_PATH
 import os
 import requests
 

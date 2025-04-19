@@ -11,3 +11,4 @@ spark_config.json
 /src/data
 /src/__pycache__
 /src/rapport
+*.pyc

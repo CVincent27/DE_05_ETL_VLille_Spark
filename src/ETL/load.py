@@ -1,4 +1,4 @@
-from ETL.transform import init_or_load_spark, CLEAN_DATA_PATH
+from transform import init_or_load_spark, CLEAN_DATA_PATH
 import os
 
 
